@@ -1,18 +1,32 @@
-import { GenderPreference, PropertyType, RoomType } from "./enum";
-import { RoomLocation } from "./room-location";
+import { GenderPreference, PropertyType, RoomStatus, RoomType } from "./enum";
 
 export interface Room {
+  // ---- Identifiers & Ownership ----
   id?: string;
-  name?: string;
+  ownerId: string;
+
+  // ---- Basic Info ----
+  name: string;
+  description?: string;
+
+  // ---- Pricing ----
   price?: number;
+  currencyCode: string; // e.g. "USD", "KHR"
+
+  // ---- Property Details ----
   floor?: number;
+  roomSize?: number; // square meters
+  roomType: RoomType; // SINGLE, DOUBLE, STUDIO
+  propertyType: PropertyType; // APARTMENT, HOUSE, etc.
 
-  location?: RoomLocation;
+  // ---- Address ----
+  address: Address;
 
+  // ---- Amenities ----
   hasFan?: boolean;
   hasAirConditioner?: boolean;
-  hasPrivateBathroom?: boolean;
   hasParking?: boolean;
+  hasPrivateBathroom?: boolean;
   hasBalcony?: boolean;
   hasKitchen?: boolean;
   hasFridge?: boolean;
@@ -21,85 +35,62 @@ export interface Room {
   hasWiFi?: boolean;
   hasElevator?: boolean;
 
+  // ---- Room Rules ----
   maxOccupants?: number;
-
   isPetFriendly?: boolean;
   isSmokingAllowed?: boolean;
   isSharedRoom?: boolean;
-
   genderPreference?: GenderPreference;
-  roomType?: RoomType;
-  propertyType?: PropertyType;
 
+  // ---- Additional Info ----
   distanceToCenter?: number;
-  nearbyLandmarks?: string[];
-
   isUtilityIncluded?: boolean;
   depositRequired?: boolean;
+  depositAmount?: number;
   minStayMonths?: number;
+  contactPhone: string;
 
-  hasPhotos?: boolean;
-  photoCount?: number;
-
-  hasVideoTour?: boolean;
+  // ---- Media ----
+  photoUrls?: string[];
+  videoUrl?: string;
   verifiedListing?: boolean;
 
-  availableFrom?: string;   //IOS string
-  availableTo?: string;     //IOS string
+  // ---- Availability ----
+  status: RoomStatus;
+  availableFrom?: string; // ISO string from backend
+  availableTo?: string;
 
+  // ---- Audit ----
   createdAt?: string;
-  lastUpdated?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
 
+  // ---- Extra ----
   extraAttributes?: Record<string, any>;
+}
 
-  /*
+// ---------------- Nested Types ----------------
+export interface Address {
+  provinceCode?: string;
+  districtCode?: string;
+  communeCode?: string;
+  villageCode?: string;
 
-    "id": "room_1003",
-        "name": "ratione Room 1003",
-        "price": 306.06045982983665,
-        "floor": 1,
-        "roomSize": 30.937720207178252,
-        "location": {
-            "country": "Cambodia",
-            "city": "Wuckertburgh",
-            "district": "Eddy Corners",
-            "street": "95496 Upton Hollow",
-            "fullAddress": "Apt. 764 44442 Grady Fort, West Akilah, NH 33234-5225"
-        },
-        "hasFan": false,
-        "hasAirConditioner": true,
-        "hasParking": true,
-        "hasPrivateBathroom": false,
-        "hasBalcony": false,
-        "hasKitchen": true,
-        "hasFridge": true,
-        "hasWashingMachine": false,
-        "hasTV": false,
-        "hasWiFi": true,
-        "hasElevator": true,
-        "maxOccupants": 2,
-        "isPetFriendly": true,
-        "isSmokingAllowed": true,
-        "isSharedRoom": true,
-        "genderPreference": "FEMALE",
-        "roomType": "DOUBLE",
-        "propertyType": "SHARED_HOUSE",
-        "distanceToCenter": 1.237720180391214,
-        "nearbyLandmarks": [
-            "gym",
-            "mall"
-        ],
-        "isUtilityIncluded": false,
-        "depositRequired": true,
-        "minStayMonths": 2,
-        "hasPhotos": true,
-        "photoCount": 9,
-        "hasVideoTour": false,
-        "verifiedListing": true,
-        "availableFrom": "2025-08-27T11:09:50.624",
-        "availableTo": "2026-01-06T11:09:50.624",
-        "createdAt": "2025-08-20T11:09:50.624",
-        "lastUpdated": "2025-08-20T11:09:50.624",
-        "extraAttributes": {}
-    */
+  provinceName?: string;
+  districtName?: string;
+  communeName?: string;
+  villageName?: string;
+
+  line1?: string;
+  line2?: string;
+  postalCode?: string;
+
+  nearbyLandmarks?: string[];
+  geo?: GeoLocation;
+}
+
+export interface GeoLocation {
+  latitude?: number;
+  longitude?: number;
 }
