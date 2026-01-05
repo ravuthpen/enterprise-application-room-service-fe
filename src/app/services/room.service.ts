@@ -11,6 +11,9 @@ import { buillParams } from '../core/http/utils';
   providedIn: 'root',
 })
 export class RoomService {
+  // getById(id: string) {
+  //   throw new Error('Method not implemented.');
+  // }
   // api_url
   // request param
 
@@ -19,11 +22,17 @@ export class RoomService {
 
   // room search pagination
 
-  constructor() {}
+  constructor() { }
 
-  list(params?: RoomListParams) : Observable<Page<Room>> {
-    return this.http.get<Page<Room>>(this.base + '/rooms/search/pagination', {
+  list(params?: RoomListParams): Observable<Page<Room>> {
+    return this.http.get<Page<Room>>(this.base + '/api/rooms/search/pagination', {
       params: buillParams(params),
     });
   }
+
+  /** GET /room/{id} */
+  getById(id: string): Observable<Room> {
+    return this.http.get<Room>(`${this.base}/api/rooms/${id}`);
+  }
+
 }
