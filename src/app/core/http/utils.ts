@@ -1,6 +1,6 @@
 import { HttpParams } from "@angular/common/http";
 
-export function buillParams<T extends object>(input?: T): HttpParams {
+export function buildParams<T extends object>(input?: T): HttpParams {
 
     let params = new HttpParams();
 

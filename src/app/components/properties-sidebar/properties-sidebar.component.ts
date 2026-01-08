@@ -55,11 +55,11 @@ export class PropertiesSidebarComponent {
       villageCode: this.villageCtrl.enabled ? raw.villageCode || null : null,
 
       hasWiFi: raw.hasWiFi ? true : null,
-    hasAirConditioner: raw.hasAirConditioner ? true : null,
-    hasParking: raw.hasParking ? true : null,
-    hasPrivateBathroom: raw.hasPrivateBathroom ? true : null,
-    hasKitchen: raw.hasKitchen ? true : null,
-    hasWashingMachine: raw.hasWashingMachine ? true : null,
+      hasAirConditioner: raw.hasAirConditioner ? true : null,
+      hasParking: raw.hasParking ? true : null,
+      hasPrivateBathroom: raw.hasPrivateBathroom ? true : null,
+      hasKitchen: raw.hasKitchen ? true : null,
+      hasWashingMachine: raw.hasWashingMachine ? true : null,
 
       // UI-friendly names for chips (optional)
       provinceName: provinceName,

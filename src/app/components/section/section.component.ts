@@ -4,10 +4,12 @@ import { PropertiesGridComponent } from "../properties-grid/properties-grid.comp
 import { PropertiesListComponent } from "../properties-list/properties-list.component";
 import { PaginationComponent } from "../pagination/pagination.component";
 import { PropertiesSidebarComponent } from "../properties-sidebar/properties-sidebar.component";
-import { RoomListParams } from '../../models/room-list-params';
 import { PropertyFilterBarComponent } from "../property-filter-bar/property-filter-bar.component";
 import { ViewMode, SortOption } from '../../models/sort-option';
 import { PropertyActiveFilterBarComponent } from "../property-active-filter-bar/property-active-filter-bar.component";
+import { PropertiesFacade } from '../../services/properties.facade';
+import { RoomListParams } from '../../models/room-list-params';
+
 
 @Component({
   selector: 'app-section',
@@ -17,66 +19,34 @@ import { PropertyActiveFilterBarComponent } from "../property-active-filter-bar/
 })
 export class SectionComponent {
 
-totalPages = signal<number>(0);
-  total = signal<number | null>(null);
-
-  onPageInfo(info: { totalPages: number; totalElements: number }) {
-    this.totalPages.set(info.totalPages);
-    this.total.set(info.totalElements);
-  }
-
-
-  filter = signal<RoomListParams>({
-    page: 0,
-    size: 6,
-    priceMin: null,
-    priceMax: null,
-    provinceCode: null,
-    districtCode: null,
-    communeCode: null,
-    villageCode: null,
-    roomType: null,
-    propertyType: null
-  } );
-
-  onFilterPatch(patch: Partial<RoomListParams>) {
-    const current = this.filter();
-    this.filter.set({ ...current, ...patch });
-  }
-
-  onClearAll() {
-    const current = this.filter();
-    this.filter.set({
-      ...current,
-      page: 0,
-      priceMin: null,
-      priceMax: null,
-      provinceCode: null,
-      districtCode: null,
-      communeCode: null,
-      villageCode: null,
-      roomType: null,
-      propertyType: null,
-  
-      hasWiFi: false,
-      hasAirConditioner: false,
-      hasParking: false,
-      hasPrivateBathroom: false,
-      hasKitchen: false,
-      hasWashingMachine: false
-    } );
-  }
-
+  // UI-only state
   viewMode = signal<ViewMode>('grid');
   sort = signal<SortOption>('NEWEST');
+
+  constructor(public readonly facade: PropertiesFacade) {}
 
   onViewModeChange(mode: ViewMode) {
     this.viewMode.set(mode);
   }
 
+  private toBackendSort(sort: SortOption): Pick<RoomListParams, 'sortBy' | 'direction'> {
+    switch (sort) {
+      case 'PRICE_ASC':
+        return { sortBy: 'price', direction: 'asc' };
+      case 'PRICE_DESC':
+        return { sortBy: 'price', direction: 'desc' };
+      case 'MOST_VIEWED':
+        return { sortBy: 'viewCount', direction: 'desc' };
+      case 'NEWEST':
+      default:
+        return { sortBy: 'createdAt', direction: 'desc' };
+    }
+  }
+
   onSortChange(sort: SortOption) {
     this.sort.set(sort);
-    this.onFilterPatch({ page: 0, sort }); 
+    const backendSort = this.toBackendSort(sort);
+    this.facade.patchFilter({...backendSort, page: 0 });
   }
 
 }

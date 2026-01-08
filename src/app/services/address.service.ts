@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { Page } from '../models/page';
 import { Room } from '../models/room';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { buillParams } from '../core/http/utils';
+import { buildParams } from '../core/http/utils';
 
 export enum AdminLevel{
   PROVINCE = 'PROVINCE',
@@ -59,7 +59,7 @@ export class AddressService {
 
   list(params?: RoomListParams) : Observable<Page<Room>> {
     return this.http.get<Page<Room>>(this.base + '/api/rooms/search/pagination', {
-      params: buillParams(params),
+      params: buildParams(params),
     });
   }
 
